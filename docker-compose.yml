@@ -1,0 +1,37 @@
+version: '20.10'
+
+networks:
+  ordens_servico-net:
+
+services:  
+  mysql:
+    image: mysql
+    container_name: mysql-ordens_servico
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '3317:3306'
+    environment:
+      MYSQL_DATABASE: ordens_servico
+      MYSQL_USER: ordens_servico
+      MYSQL_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
+      SERVICE_TAG: dev
+      SERVICE_NAME: mysql
+    networks:
+      - ordens_servico-net
+    volumes:
+      - ./database:/var/lib/mysql
+    
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php-ordens_servico
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - '8111:80'
+    networks:
+      - ordens_servico-net
+
