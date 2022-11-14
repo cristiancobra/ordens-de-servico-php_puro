@@ -41,7 +41,7 @@
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="{{ route('order.index') }}">
+								<a class="nav-link" href="/pages/order/index.php">
 									Ordens
 								</a>
 							</li>

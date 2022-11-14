@@ -24,14 +24,6 @@ class Customer
             ];
         }
 
-        // address_number is not a integer
-        if (!is_int($data->address_number)) {
-            return $message = [
-                'type' => 'danger',
-                'text' => 'Número é inválido.'
-            ];
-        }
-
         // cpf exist
         if (!$this->uniqueCpf($data->cpf)) {
             return $message = [
@@ -61,6 +53,15 @@ class Customer
     public static function find($customerId)
     {
         return findModel('customers', $customerId);
+    }
+
+    public static function returnIdByCpf($cpf)
+    {
+        $customer = findColumnModel('customers', 'cpf', $cpf);
+        
+        if ($customer) {
+            return (int) $customer[0]['id'];
+        };
     }
 
     public function uniqueCpf($cpf)

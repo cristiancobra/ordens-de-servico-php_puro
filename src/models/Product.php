@@ -83,4 +83,11 @@ class Product
 
         return true;
     }
+
+    public static function findActives()
+    {
+        $products = findColumnModel('products', 'active', 1);
+
+        return $products;
+    }
 }
