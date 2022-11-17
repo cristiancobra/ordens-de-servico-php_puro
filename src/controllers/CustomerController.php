@@ -9,9 +9,9 @@ class CustomerController {
         return $customers;
     }
 
-    public function create($data) {
-        $customer = new Customer;
-        $message = $customer->store($data);
+    public function create($customer) {
+        // $customer = new Customer($data);
+        $message = $customer->store($customer);
 
         $url = 'Location: ./../../pages/customer/index.php?messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
         
@@ -25,7 +25,13 @@ class CustomerController {
     }
 
     public function update($data) {
+        $id = $_GET['id'];
+
         $customer = new Customer;
-        $customer->save($data);
+        $message = $customer->save($data);
+
+        $url = 'Location: ./../../pages/customer/edit.php?id=' . $id . '&messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
+
+        return header($url);
     }
 }

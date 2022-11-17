@@ -25,7 +25,13 @@ class OrderController {
     }
 
     public function update($data) {
+        $id = $_GET['id'];
+
         $order = new Order;
-        $order->save($data);
+        $message = $order->save($data);
+
+        $url = 'Location: ./../../pages/order/edit.php?id=' . $id . '&messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
+
+        return header($url);
     }
 }

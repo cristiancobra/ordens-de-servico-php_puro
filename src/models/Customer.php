@@ -4,35 +4,54 @@ require_once '../../../src/models/Model.php';
 class Customer
 {
 
-    var $name;
-    var $cpf;
-    var $address;
-    var $address_number;
     public $table = 'customers';
 
-    public function __construct()
+    public function __construct($data)
     {
+        $this->name = $data['name'];
+        $this->cpf = $data['cpf'];
+        $this->address = $data['address'];
+        $this->address_number = $data['address_number'];
     }
 
-    public function store($data)
+    public function store($customer)
     {
         // name is required
-        if (!$data->name) {
+        if (!$customer->name) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Nome é obrigatório.'
             ];
         }
 
+        // cpf is required
+        if (!$customer->cpf) {
+            return $message = [
+                'type' => 'danger',
+                'text' => 'CPF é obrigatório.'
+            ];
+        }
+
+        // cpf is invalid
+        $customer->cpf = preg_replace("/[^0-9]/", "", $customer->cpf);
+        $digits = preg_match_all("/[0-9]/", $customer->cpf);
+
+        if ($digits != 11) {
+            return $message = [
+                'type' => 'danger',
+                'text' => 'Número de CPF inválido.'
+            ];
+        }
+
         // cpf exist
-        if (!$this->uniqueCpf($data->cpf)) {
+        if (!$this->uniqueCpf($customer->cpf)) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'CPF já cadastrado'
             ];
         }
 
-        storeModel($this->table, $data);
+        storeModel($this->table, $customer);
 
         return $message = [
             'type' => 'success',
@@ -40,9 +59,14 @@ class Customer
         ];
     }
 
-    public function save($data)
+    public function save($customer)
     {
-        saveModel($this->table, $data);
+        saveModel($this->table, $customer);
+
+        return $message = [
+            'type' => 'success',
+            'text' => 'Cliente atualizado com sucesso'
+        ];
     }
 
     public static function findAll()
@@ -58,7 +82,7 @@ class Customer
     public static function returnIdByCpf($cpf)
     {
         $customer = findColumnModel('customers', 'cpf', $cpf);
-        
+
         if ($customer) {
             return (int) $customer[0]['id'];
         };

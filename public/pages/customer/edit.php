@@ -1,5 +1,4 @@
 <?php
-require_once '../layouts/header.php';
 require_once '../../../src/controllers/CustomerController.php';
 
 if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['address_number'])) {
@@ -15,9 +14,21 @@ if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['address_n
 }
 
 $customer = Customer::find($_GET['id']);
+
+// header template default
+require_once '../layouts/header.php';
 ?>
 
 <div class='container mt-5'>
+
+	<?php
+	if (isset($_GET['messageType'])) {
+		echo "<div class='alert alert-" . $_GET['messageType'] . " mt-5' role='alert'>";
+		echo $_GET['messageText'];
+		echo "</div>";
+	}
+	?>
+
 	<div class='row'>
 		<div class='col'>
 			<h3 class='form-title'>

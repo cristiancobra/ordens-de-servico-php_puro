@@ -7,9 +7,9 @@ require_once '../../../src/models/Product.php';
 if (isset($_POST['name']) && isset($_POST['cpf']) && isset($_POST['product_id']) && isset($_POST['start_date']) ) {
 
 	// Product
-	$dataOrder = new stdClass();
-	$dataOrder->product_id = $_POST['product_id'];
-	$dataOrder->start_date = $_POST['start_date'];
+	$data['product_id'] = $_POST['product_id'];
+	$data['start_date'] = $_POST['start_date'];
+	$order = new Product($data);
 
 	if (isset($_POST['active'])) {
 		$dataOrder->active = $_POST['active'];

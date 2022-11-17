@@ -4,20 +4,22 @@ require_once '../../../src/models/Model.php';
 class Product
 {
 
-    var $name;
-    var $cpf;
-    var $address;
-    var $address_number;
     public $table = 'products';
 
-    public function __construct()
+    public function __construct($data)
     {
+        $this->sku = $data['sku'];
+        $this->description = $data['description'];
+
+        if (isset($data['active'])) {
+            $this->active = (int) $data['active'];
+        }
     }
 
-    public function store($data)
+    public function store($product)
     {
         // sku is required
-        if (!$data->sku) {
+        if (!$product->sku) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Código é obrigatório.'
@@ -25,7 +27,7 @@ class Product
         }
 
         // sku exist
-        if (!$this->uniqueSku($data->sku)) {
+        if (!$this->uniqueSku($product->sku)) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Código já cadastrado'
@@ -33,7 +35,7 @@ class Product
         }
 
         // description is required
-        if (!$data->description) {
+        if (!$product->description) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Descrição é obrigatório.'
@@ -41,8 +43,8 @@ class Product
         }
 
         // active is boolean or null
-        if (isset($data->active)) {
-            if ($data->active != 1 and $data->active != 0 and $data->active != null) {
+        if (isset($product->active)) {
+            if ($product->active != 1 and $product->active != 0 and $product->active != null) {
                 return $message = [
                     'type' => 'danger',
                     'text' => 'Campo Ativo é inválido'
@@ -50,7 +52,7 @@ class Product
             }
         }
 
-        storeModel($this->table, $data);
+        storeModel($this->table, $product);
 
         return $message = [
             'type' => 'success',
@@ -58,9 +60,9 @@ class Product
         ];
     }
 
-    public function save($data)
+    public function save($product)
     {
-        saveModel($this->table, $data);
+        saveModel($this->table, $product);
     }
 
     public static function findAll()

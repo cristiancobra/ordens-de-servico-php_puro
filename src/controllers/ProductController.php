@@ -9,9 +9,8 @@ class ProductController {
         return $products;
     }
 
-    public function create($data) {
-        $product = new Product;
-        $message = $product->store($data);
+    public function create($product) {
+        $message = $product->store($product);
 
         $url = 'Location: ./../../pages/product/index.php?messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
         
@@ -24,8 +23,7 @@ class ProductController {
         return $product;
     }
 
-    public function update($data) {
-        $product = new Product;
-        $product->save($data);
+    public function update($product) {
+        $product->save($product);
     }
 }

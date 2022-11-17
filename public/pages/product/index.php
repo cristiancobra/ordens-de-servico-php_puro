@@ -5,16 +5,17 @@ require_once '../../../src/models/Product.php';
 // crud store/post
 if (isset($_POST['sku']) && isset($_POST['description'])) {
 
-	$data = new stdClass();
-	$data->sku = $_POST['sku'];
-	$data->description = $_POST['description'];
+	$data['sku'] = $_POST['sku'];
+	$data['description'] = $_POST['description'];
 
 	if (isset($_POST['active'])) {
-		$data->active = $_POST['active'];
+		$data['active'] = $_POST['active'];
 	}
 
+	$product = new Product($data);
+
 	$productController = new ProductController;
-	$productController->create($data);
+	$productController->create($product);
 }
 
 // all models for index foreach

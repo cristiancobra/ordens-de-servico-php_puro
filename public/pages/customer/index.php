@@ -5,14 +5,15 @@ require_once '../../../src/models/Customer.php';
 // crud store/post
 if (isset($_POST['name']) && isset($_POST['cpf']) && isset($_POST['address']) && isset($_POST['address_number'])) {
 
-	$data = new stdClass();
-	$data->name = $_POST['name'];
-	$data->cpf = $_POST['cpf'];
-	$data->address = $_POST['address'];
-	$data->address_number = (int) $_POST['address_number'];
+	$data['name'] = $_POST['name'];
+	$data['cpf'] = $_POST['cpf'];
+	$data['address'] = $_POST['address'];
+	$data['address_number'] = (int) $_POST['address_number'];
+
+	$customer = new Customer($data);
 
 	$customerController = new CustomerController;
-	$customerController->create($data);
+	$customerController->create($customer);
 }
 
 // all models for index foreach

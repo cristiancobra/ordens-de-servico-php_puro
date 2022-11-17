@@ -1,41 +1,42 @@
 <?php
 require_once '../layouts/header.php';
-require_once '../../../src/controllers/CustomerController.php';
+require_once '../../../src/controllers/OrderController.php';
 
 if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['address_number'])) {
 
 	$data = new stdClass();
-	$data->id = $_GET['id'];
+	$data->id = (int) $_GET['id'];
 	$data->name = $_POST['name'];
 	$data->address = $_POST['address'];
 	$data->address_number = $_POST['address_number'];
 
-	$customerController = new CustomerController;
-	$customerController->update($data);
+	$orderController = new OrderController;
+	$orderController->update($data);
 }
 
-$customer = Customer::find($_GET['id']);
+$order = Order::findWithCustomer($_GET['id']);
+$order = reset($order);
 ?>
 
 <div class='container mt-5'>
 	<div class='row'>
 		<div class='col'>
 			<h3 class='form-title'>
-				EDITAR INFORMAÇÕES DO CLIENTE
+				EDITAR ORDEM DE SERVIÇO
 			</h3>
 		</div>
 	</div>
 
-	<form name='customer-form' method='post' action='<?php echo '/pages/customer/edit.php?id=' . $customer['id'] ?> '>
+	<form name='order-form' method='post' action='<?php echo '/pages/order/edit.php?id=' . $order['id'] ?> '>
 		<div class='row mt-4'>
 
 			<div class='col-1 form-label'>
 				<label for='formName' class="form-label">
-					Nome
+					Cliente
 				</label>
 			</div>
 			<div class='col-4'>
-				<input id='formName' class='form-control' type='text' name='name' value='<?php echo $customer['name'] ?>'>
+				<input id='formName' class='form-control' type='text' name='name' value='<?php echo $order['name'] ?>'>
 			</div>
 
 			<div class='row mt-4'>
@@ -46,7 +47,7 @@ $customer = Customer::find($_GET['id']);
 				</div>
 				<div class='col-2'>
 					<p class="text-start mt-3">
-						<?php echo $customer['cpf'] ?>
+						<?php echo $order['cpf'] ?>
 					</p>
 				</div>
 			</div>
@@ -58,7 +59,7 @@ $customer = Customer::find($_GET['id']);
 					</label>
 				</div>
 				<div class='col-4'>
-					<input id='formAddress' class='form-control' type='text' name='address' value='<?php echo $customer['address'] ?>'>
+					<input id='formAddress' class='form-control' type='text' name='address' value='<?php echo $order['address'] ?>'>
 				</div>
 			</div>
 
@@ -69,7 +70,7 @@ $customer = Customer::find($_GET['id']);
 					</label>
 				</div>
 				<div class='col-2'>
-					<input id='formAddressNumber' class='form-control text-end' type='number' name='address_number' value='<?php echo $customer['address_number'] ?>'>
+					<input id='formAddressNumber' class='form-control text-end' type='number' name='address_number' value='<?php echo $order['address_number'] ?>'>
 				</div>
 			</div>
 
