@@ -9,7 +9,9 @@ if (isset($_POST['sku']) && isset($_POST['description'])) {
 	$data['description'] = $_POST['description'];
 
 	if (isset($_POST['active'])) {
-		$data['active'] = $_POST['active'];
+		$data['active'] = 1;
+	} else {
+		$data['active'] = 0;
 	}
 
 	$product = new Product($data);

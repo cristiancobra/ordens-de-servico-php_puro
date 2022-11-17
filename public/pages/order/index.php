@@ -9,19 +9,15 @@ if (isset($_POST['name']) && isset($_POST['cpf']) && isset($_POST['product_id'])
 	// Product
 	$data['product_id'] = $_POST['product_id'];
 	$data['start_date'] = $_POST['start_date'];
-	$order = new Product($data);
-
-	if (isset($_POST['active'])) {
-		$dataOrder->active = $_POST['active'];
-	}
+	$order = new Order($data);
 
 	// Customer
-	$dataCustomer = new stdClass();
-	$dataCustomer->name = $_POST['name'];
-	$dataCustomer->cpf = $_POST['cpf'];
+	$data['name'] = $_POST['name'];
+	$data['cpf'] = $_POST['cpf'];
+	$customer = new Customer($data);
 
 	$orderController = new OrderController;
-	$orderController->create($dataOrder, $dataCustomer);
+	$orderController->create($order, $customer);
 }
 
 // all models and products for index foreach

@@ -3,14 +3,15 @@ require_once '../../../src/controllers/CustomerController.php';
 
 if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['address_number'])) {
 
-	$data = new stdClass();
-	$data->id = $_GET['id'];
-	$data->name = $_POST['name'];
-	$data->address = $_POST['address'];
-	$data->address_number = $_POST['address_number'];
+	$data['id'] = $_GET['id'];
+	$data['name'] = $_POST['name'];
+	$data['address'] = $_POST['address'];
+	$data['address_number'] = $_POST['address_number'];
+
+	$customer = new Customer($data);
 
 	$customerController = new CustomerController;
-	$customerController->update($data);
+	$customerController->update($customer);
 }
 
 $customer = Customer::find($_GET['id']);

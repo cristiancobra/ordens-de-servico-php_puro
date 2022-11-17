@@ -24,6 +24,12 @@ class ProductController {
     }
 
     public function update($product) {
-        $product->save($product);
+        $id = $_GET['id'];
+        
+        $message = $product->save($product);
+
+        $url = 'Location: ./../../pages/product/edit.php?id=' . $id . '&messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
+
+        return header($url);
     }
 }

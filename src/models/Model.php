@@ -44,8 +44,11 @@ function saveModel($table, $data)
 
     $columns = [];
     foreach ($data as $key => $val) {
-        $columns[] = "$key = '$val'";
+        if ($key != 'table') {
+            $columns[] = "$key = '$val'";
+        }
     }
+    
     $sql = "UPDATE $table SET " . implode(', ', $columns) . " WHERE id = $id";
 
     $stmt = mysqli_stmt_init($conn);
@@ -127,12 +130,12 @@ function findColumnModel($table, $column, $value)
 {
     $database = new Database;
     $conn = $database->connect();
-    
+
     $column = mysqli_real_escape_string($conn, $column);
     $value = mysqli_real_escape_string($conn, $value);
 
     $sql = "SELECT * FROM $table  WHERE $column = $value";
-    
+
     $stmt = mysqli_stmt_init($conn);
 
     if (!mysqli_stmt_prepare($stmt, $sql))

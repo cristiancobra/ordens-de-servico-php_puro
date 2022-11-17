@@ -4,26 +4,32 @@ require_once '../../../src/models/Customer.php';
 
 class Order
 {
-    var $id;
-    var $customer_id;
-    var $product_id;
-    var $start_date;
-    public $finished;
+    
     public $table = 'orders';
 
     public function __construct($data)
     {
-        $this->id = $data['id'];
-        $this->customer_id = $data['customer_id'];
         $this->product_id = $data['product_id'];
         $this->start_date = $data['start_date'];
-        $this->finished = $data['finished'];
+
+        if (isset($data['id'])) {
+            $this->id = $data['id'];
+        }
+
+        if (isset($data['customer_id'])) {
+            $this->customer_id = $data['customer_id'];
+        }
+
+        if (isset($data['finished'])) {
+            $this->finished = $data['finished'];
+        }
+
     }
 
-    public function store($dataOrder, $dataCustomer)
+    public function store($order, $customer)
     {
         // product_id is required
-        if (!$dataOrder->product_id) {
+        if (!$order->product_id) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Produto é obrigatório.'
@@ -31,7 +37,7 @@ class Order
         }
 
         // start_date is required
-        if (!$dataOrder->start_date) {
+        if (!$order->start_date) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'Data de abertura é obrigatório.'
@@ -39,7 +45,7 @@ class Order
         }
 
         // cpf is required
-        if (!$dataCustomer->cpf) {
+        if (!$customer->cpf) {
             return $message = [
                 'type' => 'danger',
                 'text' => 'CPF é obrigatório.'
@@ -47,9 +53,9 @@ class Order
         }
 
         // get cpf if it already exists, otherwise create a new client
-        $dataOrder->customer_id = $this->checkIfCustomerExist($dataCustomer);
+        $order->customer_id = $this->checkIfCustomerExist($customer);
 
-        storeModel($this->table, $dataOrder);
+        storeModel($this->table, $order);
 
         return $message = [
             'type' => 'success',
@@ -126,18 +132,19 @@ class Order
         return findWithQuery($sql);
     }
 
-    public function checkIfCustomerExist($dataCustomer)
+    public function checkIfCustomerExist($customer)
     {
-        $customer = findColumnModel('customers', 'cpf', $dataCustomer->cpf);
+        $customerFound = findColumnModel('customers', 'cpf', $customer->cpf);
 
-        if ($customer) {
-            return $customer[0]['id'];
+        if ($customerFound) {
+            return $customerFound[0]['id'];
         }
+// print_r($customer);
+        $data['name'] = $customer->name;
+        $data['cpf'] = $customer->cpf;
+        $customer->storeFromOrder($customer);
 
-        $customer = new Customer;
-        $customer->store($dataCustomer);
-
-        return Customer::returnIdByCpf($dataCustomer->cpf);;
+        return Customer::returnIdByCpf($customer->cpf);;
     }
 
     public static function filterOrders($data)
@@ -149,7 +156,8 @@ class Order
             $sql = "SELECT 
             orders.id, 
             orders.product_id, 
-            orders.start_date, 
+            orders.start_date,
+            orders.finished,
             customers.cpf, 
             customers.name,
             products.description
@@ -168,6 +176,7 @@ class Order
             orders.id, 
             orders.product_id, 
             orders.start_date, 
+            orders.finished,
             customers.cpf, 
             customers.name,
             products.description

@@ -11,6 +11,10 @@ class Product
         $this->sku = $data['sku'];
         $this->description = $data['description'];
 
+        if (isset($data['id'])) {
+            $this->id = $data['id'];
+        }
+
         if (isset($data['active'])) {
             $this->active = (int) $data['active'];
         }
@@ -43,13 +47,11 @@ class Product
         }
 
         // active is boolean or null
-        if (isset($product->active)) {
-            if ($product->active != 1 and $product->active != 0 and $product->active != null) {
-                return $message = [
-                    'type' => 'danger',
-                    'text' => 'Campo Ativo é inválido'
-                ];
-            }
+        if ($product->active != 1 and $product->active != 0) {
+            return $message = [
+                'type' => 'danger',
+                'text' => 'Campo Ativo é inválido'
+            ];
         }
 
         storeModel($this->table, $product);
@@ -63,6 +65,11 @@ class Product
     public function save($product)
     {
         saveModel($this->table, $product);
+
+        return $message = [
+            'type' => 'success',
+            'text' => 'Produto atualizado com sucesso'
+        ];
     }
 
     public static function findAll()

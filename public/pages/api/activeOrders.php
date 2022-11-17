@@ -5,18 +5,17 @@ $id = (int) $_GET['id'];
 
 $data = Order::find($id);
 
-$order = new Order;
-var_dump($order);
-$order->id = $data['id'];
+$order = new Order($data);
 
-if( $data['finished'] == null ) {
+if( !isset($order->finished) OR $order->finished == null OR $order->finished == 0 ) {
     $order->finished = 1;
 
-} elseif ( $data['finished'] = 1 ) {
-    $order->finished = null;
+} elseif ( $order->finished == 1 ) {
+    $order->finished = 0;
 }
 
-$order->save($data);
+$order->save($order);
+$order->id = $id;
 
 header("Content-Type: application/json");
 

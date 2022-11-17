@@ -140,7 +140,7 @@ require_once '../layouts/header.php';
 					<div class="col-2">
 
 						<?php
-						if (isset($order['finished'])) {
+						if ($order['finished'] == 1) {
 							echo "<button type='button' id=" . $order['id'] . " class='btn btn-success w-100 pb-1' onClick='ajax(" . $order['id']  . ")'>";
 							echo "FINALIZADA";
 						} else {

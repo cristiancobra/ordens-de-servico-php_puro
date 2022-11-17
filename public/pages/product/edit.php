@@ -1,75 +1,79 @@
 <?php
-require_once '../layouts/header.php';
-require_once '../../../src/controllers/CustomerController.php';
+require_once '../../../src/controllers/ProductController.php';
 
-if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['address_number'])) {
+// crud store/post
+if (isset($_POST['sku']) && isset($_POST['description'])) {
 
-	$data = new stdClass();
-	$data->id = $_GET['id'];
-	$data->name = $_POST['name'];
-	$data->address = $_POST['address'];
-	$data->address_number = $_POST['address_number'];
+	$data['id'] = $_GET['id'];
+	$data['sku'] = $_POST['sku'];
+	$data['description'] = $_POST['description'];
 
-	$customerController = new CustomerController;
-	$customerController->update($data);
+	if (isset($_POST['active'])) {
+		$data['active'] = 1;
+	} else {
+		$data['active'] = 0;
+	}
+
+	$product = new Product($data);
+
+	$productController = new ProductController;
+	$productController->update($product);
 }
 
-$customer = Customer::find($_GET['id']);
+$product = Product::find($_GET['id']);
+
+require_once '../layouts/header.php';
 ?>
 
 <div class='container mt-5'>
+
+	<?php
+	if (isset($_GET['messageType'])) {
+		echo "<div class='alert alert-" . $_GET['messageType'] . " mt-5' role='alert'>";
+		echo $_GET['messageText'];
+		echo "</div>";
+	}
+	?>
+
 	<div class='row'>
 		<div class='col'>
 			<h3 class='form-title'>
-				EDITAR INFORMAÇÕES DO CLIENTE
+				EDITAR INFORMAÇÕES DO PRODUTO
 			</h3>
 		</div>
 	</div>
 
-	<form name='customer-form' method='post' action='<?php echo '/pages/customer/edit.php?id=' . $customer['id'] ?> '>
+	<form name='product-form' method='post' action='<?php echo '/pages/product/edit.php?id=' . $product['id'] ?> '>
 		<div class='row mt-4'>
 
 			<div class='col-1 form-label'>
-				<label for='formName' class="form-label">
-					Nome
+				<label for='formSku' class="form-label">
+				Código
 				</label>
 			</div>
 			<div class='col-4'>
-				<input id='formName' class='form-control' type='text' name='name' value='<?php echo $customer['name'] ?>'>
-			</div>
-
-			<div class='row mt-4'>
-				<div class='col-1 form-label'>
-					<label for='formCpf' class="form-label">
-						CPF
-					</label>
-				</div>
-				<div class='col-2'>
-					<p class="text-start mt-3">
-						<?php echo $customer['cpf'] ?>
-					</p>
-				</div>
+				<input id='formSku' class='form-control' type='text' name='sku' value='<?php echo $product['sku'] ?>'>
 			</div>
 
 			<div class='row mt-4'>
 				<div class='col-1'>
-					<label for='formAddress' class="form-label">
-						Endereço
+					<label for='formDescription' class="form-label">
+					Descrição
 					</label>
 				</div>
 				<div class='col-4'>
-					<input id='formAddress' class='form-control' type='text' name='address' value='<?php echo $customer['address'] ?>'>
+					<input id='formDescription' class='form-control' type='text' name='description' value='<?php echo $product['description'] ?>'>
 				</div>
 			</div>
 
-			<div class='row mt-4'>
-				<div class='col-1'>
-					<label for='formAddressNumber' class="form-label">
-						Número
-					</label>
-				</div>
-				<div class='col-2'>
-					<input id='formAddressNumber' class='form-control text-end' type='number' name='address_number' value='<?php echo $customer['address_number'] ?>'>
+			<div class='col-1'>
+				<label class='form-label' for='formStatus' class='form-label'>
+					Ativo
+				</label>
+			</div>
+			<div class='col-1 ms-auto'>
+				<div class="form-check form-switch">
+					<input id="formActive" class="form-check-input" type="checkbox" name='active' value='<?php echo $product['active'] ?>' <?php if ($product['active'] == 1) { echo 'checked'; } ?> >
 				</div>
 			</div>
 

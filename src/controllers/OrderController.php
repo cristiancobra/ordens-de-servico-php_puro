@@ -9,9 +9,8 @@ class OrderController {
         return $orders;
     }
 
-    public function create($dataOrder, $dataCustomer) {
-        $order = new Order;
-        $message = $order->store($dataOrder, $dataCustomer);
+    public function create($order, $customer) {
+        $message = $order->store($order, $customer);
 
         $url = 'Location: ./../../pages/order/index.php?messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
         
@@ -24,11 +23,10 @@ class OrderController {
         return $order;
     }
 
-    public function update($data) {
+    public function update($order) {
         $id = $_GET['id'];
 
-        $order = new Order;
-        $message = $order->save($data);
+        $message = $order->save($order);
 
         $url = 'Location: ./../../pages/order/edit.php?id=' . $id . '&messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
 

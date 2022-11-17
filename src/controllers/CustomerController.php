@@ -10,7 +10,6 @@ class CustomerController {
     }
 
     public function create($customer) {
-        // $customer = new Customer($data);
         $message = $customer->store($customer);
 
         $url = 'Location: ./../../pages/customer/index.php?messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
@@ -24,11 +23,10 @@ class CustomerController {
         return $customer;
     }
 
-    public function update($data) {
+    public function update($customer) {
         $id = $_GET['id'];
 
-        $customer = new Customer;
-        $message = $customer->save($data);
+        $message = $customer->save($customer);
 
         $url = 'Location: ./../../pages/customer/edit.php?id=' . $id . '&messageType=' . $message['type'] . '&messageText=' . $message['text'] ;
 
